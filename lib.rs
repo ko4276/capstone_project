@@ -16,18 +16,6 @@ pub mod model_marketplace {
         royalty_bps: u16,
         is_allowed: bool,
     ) -> Result<()> {
-        let (model_pda, _bump) = Pubkey::find_program_address(
-            &[
-                b"model", ctx.accounts.creator.key().as_ref(),
-                model_name.as_bytes()
-            ],
-            ctx.program_id,
-        );
-        require!(
-            model_pda == ctx.accounts.model_account.key(),
-            CustomError::OwnerMismatch
-        );
-
         let model = &mut ctx.accounts.model_account;
 
         model.creator = ctx.accounts.creator.key();
@@ -66,18 +54,6 @@ pub mod model_marketplace {
         is_active: bool,
         is_allowed: bool,
     ) -> Result<()> {
-        let (new_model_pda, _bump) = Pubkey::find_program_address(
-            &[
-                b"model", ctx.accounts.creator.key().as_ref(),
-                model_name.as_bytes()
-            ],
-            ctx.program_id,
-        );
-        require!(
-            new_model_pda == ctx.accounts.new_model_account.key(),
-            CustomError::OwnerMismatch
-        );
-
         let new_model = &mut ctx.accounts.new_model_account;
         let parent_model = &ctx.accounts.parent_model_account;
 
@@ -105,9 +81,12 @@ pub mod model_marketplace {
 }
 
 #[derive(Accounts)]
+#[instruction(model_name: String)]
 pub struct CreateModel<'info> {
     #[account(
         init,
+        seeds = [b"model", creator.key().as_ref(), model_name.as_bytes()],
+        bump,
         payer = creator,
         space = 8 + 32 + 4 + 256 + 4 + 256 + 2 + 8 + 1 + 1 + 4 + 256 + 1, // discriminator + all fields
     )]
@@ -140,9 +119,12 @@ pub struct BuyLicense<'info> {
 }
 
 #[derive(Accounts)]
+#[instruction(model_name: String)]
 pub struct RegisterDerivativeModel<'info> {
     #[account(
         init,
+        seeds = [b"model", creator.key().as_ref(), model_name.as_bytes()],
+        bump,
         payer = creator,
         space = 8 + 32 + 4 + 256 + 4 + 256 + 2 + 8 + 1 + 1 + 4 + 256 + 1, // discriminator + all fields
     )]
