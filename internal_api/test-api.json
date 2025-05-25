@@ -1,0 +1,7 @@
+{
+  "model_name": "test-model-real",
+  "creatorWallet": "dummy",
+  "url": "https://test.com/model",
+  "royaltyBps": 500,
+  "isAllowed": true
+} 
