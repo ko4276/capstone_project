@@ -1,0 +1,363 @@
+{
+  "address": "GUrLuMj8yCB2T4NKaJSVqrAWWCMPMf1qtBSnDR8ytYwB",
+  "metadata": {
+    "name": "model_marketplace",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "buy_license",
+      "discriminator": [
+        255,
+        81,
+        129,
+        152,
+        169,
+        201,
+        232,
+        105
+      ],
+      "accounts": [
+        {
+          "name": "license_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  108,
+                  105,
+                  99,
+                  101,
+                  110,
+                  115,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "model_account"
+              },
+              {
+                "kind": "account",
+                "path": "user"
+              }
+            ]
+          }
+        },
+        {
+          "name": "user",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "model_account",
+          "writable": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "license_type",
+          "type": "u8"
+        }
+      ]
+    },
+    {
+      "name": "create_model",
+      "discriminator": [
+        212,
+        233,
+        41,
+        219,
+        130,
+        212,
+        212,
+        229
+      ],
+      "accounts": [
+        {
+          "name": "model_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  111,
+                  100,
+                  101,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "creator"
+              },
+              {
+                "kind": "arg",
+                "path": "model_name"
+              }
+            ]
+          }
+        },
+        {
+          "name": "creator",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "model_name",
+          "type": "string"
+        },
+        {
+          "name": "url",
+          "type": "string"
+        },
+        {
+          "name": "royalty_bps",
+          "type": "u16"
+        },
+        {
+          "name": "is_allowed",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "name": "deactivate_model",
+      "discriminator": [
+        36,
+        212,
+        100,
+        110,
+        59,
+        184,
+        208,
+        38
+      ],
+      "accounts": [
+        {
+          "name": "model_account",
+          "writable": true
+        },
+        {
+          "name": "creator",
+          "signer": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "register_derivative_model",
+      "discriminator": [
+        211,
+        66,
+        144,
+        76,
+        193,
+        178,
+        222,
+        219
+      ],
+      "accounts": [
+        {
+          "name": "new_model_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  111,
+                  100,
+                  101,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "creator"
+              },
+              {
+                "kind": "arg",
+                "path": "model_name"
+              }
+            ]
+          }
+        },
+        {
+          "name": "creator",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "parent_model_account",
+          "writable": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "model_name",
+          "type": "string"
+        },
+        {
+          "name": "new_url",
+          "type": "string"
+        },
+        {
+          "name": "royalty_bps",
+          "type": "u16"
+        },
+        {
+          "name": "is_active",
+          "type": "bool"
+        },
+        {
+          "name": "is_allowed",
+          "type": "bool"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "LicenseAccount",
+      "discriminator": [
+        120,
+        20,
+        28,
+        217,
+        130,
+        168,
+        223,
+        118
+      ]
+    },
+    {
+      "name": "ModelAccount",
+      "discriminator": [
+        96,
+        158,
+        53,
+        206,
+        177,
+        115,
+        161,
+        132
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "ModelInactive",
+      "msg": "This model is deactivated"
+    },
+    {
+      "code": 6001,
+      "name": "Unauthorized",
+      "msg": "Not authorized"
+    },
+    {
+      "code": 6002,
+      "name": "IsNotAllowed",
+      "msg": "This model does not allow fine-tuning"
+    },
+    {
+      "code": 6003,
+      "name": "OwnerMismatch",
+      "msg": "Owner mismatch."
+    }
+  ],
+  "types": [
+    {
+      "name": "LicenseAccount",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "user",
+            "type": "pubkey"
+          },
+          {
+            "name": "model",
+            "type": "pubkey"
+          },
+          {
+            "name": "license_type",
+            "type": "u8"
+          },
+          {
+            "name": "issued_at",
+            "type": "i64"
+          },
+          {
+            "name": "is_active",
+            "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ModelAccount",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "model_name",
+            "type": "string"
+          },
+          {
+            "name": "creator",
+            "type": "pubkey"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "royalty_bps",
+            "type": "u16"
+          },
+          {
+            "name": "created_at",
+            "type": "i64"
+          },
+          {
+            "name": "is_active",
+            "type": "bool"
+          },
+          {
+            "name": "parent",
+            "type": {
+              "option": "string"
+            }
+          },
+          {
+            "name": "is_allowed",
+            "type": "bool"
+          }
+        ]
+      }
+    }
+  ]
+}
