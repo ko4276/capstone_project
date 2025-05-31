@@ -1,0 +1,5 @@
+node_modules
+# Keep environment variables out of version control
+.env
+# 업로드된 대용량 파일
+uploads/
