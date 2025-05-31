@@ -12,9 +12,20 @@ import path from "path";
 import * as borsh from "borsh";
 
 // ✅ 설정
-const PROGRAM_ID = new PublicKey(process.env.PROGRAM_ID!);
+const PROGRAM_ID = new PublicKey(process.env.PROGRAM_ID || "GUrLuMj8yCB2T4NKaJSVqrAWWCMPMf1qtBSnDR8ytYwB");
 const IDL_PATH = path.resolve(__dirname, "../idl/my_solana_program.json");
-const IDL = JSON.parse(fs.readFileSync(IDL_PATH, "utf-8"));
+// IDL 파일이 없는 경우를 위한 기본 설정
+let IDL: any = {};
+try {
+  IDL = JSON.parse(fs.readFileSync(IDL_PATH, "utf-8"));
+} catch (error) {
+  console.warn("⚠️ IDL 파일을 찾을 수 없습니다. 기본 discriminator를 사용합니다.");
+  IDL = {
+    instructions: [
+      { name: "initialize", discriminator: [212, 233, 41, 219, 130, 212, 212, 229] }
+    ]
+  };
+}
 const connection = new Connection("https://api.devnet.solana.com", "processed");
 
 // ✅ 백엔드 지갑 로드 (옵션)
